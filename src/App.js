@@ -1,27 +1,13 @@
-import styled from 'styled-components';
-import ContextContainer from './components/ContextContainer';
-import InputContainer from './components/InputContainer';
 import React, { useState, useEffect } from "react";
 import io from 'socket.io-client';
-
-const Container = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-end;
-	width: 100%;
-	height: 100vh;
-	max-height: 100%;
-	overflow: hidden;
-	background-color: #282c34;
-	color: #ccc;
-	padding: 2rem 1rem;
-	gap: 1rem;
-`;
+import Game from "./pages/Game";
+import Lobby from "./pages/Lobby";
+import Login from "./pages/Login";
 
 const ENDPOINT = "http://localhost:5000";
 
 function App() {
+	const [theme, setTheme] = useState("dark");
 
 	const [socket, setSocket] = useState(null);
 
@@ -40,6 +26,14 @@ function App() {
 			console.log(data);
 		});
 
+		socket.on("rooms_update", (rooms) => {
+			setRooms(rooms);
+		});
+
+		socket.on("joined_room", (roomid) => {
+			setCurrentRoom(roomid);
+		});
+
 		setSocket(socket);
 
 		return () => {
@@ -47,28 +41,84 @@ function App() {
 		};
 	}, []);
 
-	function handleSendMessage(recipient, message) {
-		socket.emit("message", { recipient, message });
+	// Global variables
+	const [playing, setPlaying] = useState(false);
+	const [username, setUsername] = useState(undefined);
+	const handleLogin = (username) => {
+		setUsername(username);
+		socket.emit("login", {'name': username});
 	}
-
-	const [suggestions, setSuggestions] = useState([
-		"Hacer un té",
-		"Comprar un libro",
-		"Matar a un bebé y utilizar su sangre para construir un pentagrama",
-		"Echar una siestecita"
+	const handleError = (error) => { }
+	
+	// Lobby variables
+	const [rooms, setRooms] = useState([
+		{
+			"id": "1",
+			"name": "Room 1",
+			"description": "This is room 1",
+			"players": [
+				{
+					"id": "1",
+					"name": "Player 1",
+				},
+				{
+					"id": "2",
+					"name": "Player 2",
+				},
+				{
+					"id": socket ? socket.id : null,
+					"name": "Player 3",
+				}
+			],
+			"max_players": 4,
+			"owner": "1",
+		}
 	]);
-	const sendInput = (input) => {
-		console.log(input);
+	const [currentRoom, setCurrentRoom] = useState(null);
+	const createRoom = (name, description) => {
+		socket.emit("create_room", {
+			'name': name,
+			'description': description,
+		});
 	}
+	const joinRoom = (room) => {
+		socket.emit("join_room", {
+			'room_id': room.id,
+		});
+	}
+	const leaveRoom = () => {
+		socket.emit("leave_room");
+		setCurrentRoom(null);
+	}
+	const startGame = () => { }
+
+	// Game variables
+	const [canSendInput, setCanSendInput] = useState(false);
+	const sendInput = (input) => { }
+
+
 
 	return (
-		<Container className="App">
-			<ContextContainer />
-			<InputContainer
-				suggestions={suggestions}
-				sendInput={sendInput}
-			/>
-		</Container>
+		<div className={`App ${theme}`}>
+			{
+				(username === undefined) ? (<Login handleLogin={handleLogin} />
+			) : playing ? (
+				<Game
+					canSendInput={canSendInput}
+					sendInput={sendInput}
+				/>
+			) : (
+				<Lobby
+					userId={socket ? socket.id : null}
+					availableRooms={rooms}
+					currentRoom={currentRoom}
+					createRoom={createRoom}
+					joinRoom={joinRoom}
+					leaveRoom={leaveRoom}
+					startGame={startGame}
+				/>
+			)}
+		</div>
 	);
 }
 

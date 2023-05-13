@@ -1,0 +1,19 @@
+.App.dark {
+	--background-1: #1e1e1e;
+	--background-2: #2e2e2e;
+	--background-3: #3e3e3e;
+	--background-4: #4e4e4e;
+
+	--text-1: #ffffff;
+	--text-2: #e0e0e0;
+	--text-3: #c0c0c0;
+
+	--accent-1: #0e90d8;
+	--accent-2: #0ea5e9;
+	--accent-3: #0eb9f8;
+
+	--danger-1: #E9520E;
+	--danger-2: #FF6D3F;
+	--danger-3: #FF8F6D;
+
+}
