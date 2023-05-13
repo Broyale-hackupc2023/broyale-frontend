@@ -31,7 +31,7 @@ function App() {
 		});
 
 		socket.on("joined_room", (room) => {
-			setCurrentRoom(room);
+			setCurrentRoomId(room.id);
 		});
 
 		socket.on("error", (error) => {
@@ -51,10 +51,6 @@ function App() {
 			return alert.toast();
 		});
 
-		socket.on("start_game", () => {
-			setPlaying(true);
-		});
-
 		setSocket(socket);
 
 		return () => {
@@ -63,7 +59,6 @@ function App() {
 	}, []);
 
 	// Global variables
-	const [playing, setPlaying] = useState(false);
 	const [username, setUsername] = useState(undefined);
 	const handleLogin = (username) => {
 		setUsername(username);
@@ -96,7 +91,7 @@ function App() {
 		}
 	]);
 
-	const [currentRoom, setCurrentRoom] = useState(null);
+	const [currentRoomId, setCurrentRoomId] = useState(null);
 	const createRoom = (name, description) => {
 		socket.emit("create_room", {
 			'name': name,
@@ -110,26 +105,30 @@ function App() {
 	}
 	const leaveRoom = () => {
 		socket.emit("leave_room");
-		setCurrentRoom(null);
+		setCurrentRoomId(null);
 	}
 	const startGame = (room) => {
 		socket.emit("start_game", {
-			'room_id': room,
+			'room_id': room.id,
 		});
 	}
 
 	// Game variables
+	const [gameStarted, setGameStarted] = useState(false);
 	const [canSendInput, setCanSendInput] = useState(false);
-	const sendInput = (input) => { }
+	const [arrMessages, setArrMessages] = useState([]);
+	const sendInput = (input) => {
 
-
+	}
 
 	return (
 		<div className={`App ${theme}`}>
 			{
 				(username === undefined) ? (<Login handleLogin={handleLogin} />
-			) : playing ? (
+			) : (currentRoomId !== null && currentRoomId in rooms && rooms[currentRoomId].active) ? (
 				<Game
+					userId={socket ? socket.id : null}
+					arrMessages={arrMessages}
 					canSendInput={canSendInput}
 					sendInput={sendInput}
 				/>
@@ -137,7 +136,7 @@ function App() {
 				<Lobby
 					userId={socket ? socket.id : null}
 					availableRooms={rooms}
-					currentRoom={currentRoom}
+					currentRoomId={currentRoomId}
 					createRoom={createRoom}
 					joinRoom={joinRoom}
 					leaveRoom={leaveRoom}

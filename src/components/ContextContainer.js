@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Message from "./Message";
 
 const Container = styled.div`
 	display: flex;
@@ -16,11 +17,27 @@ const Container = styled.div`
 	gap: 1rem;
 `;
 
+const ContextText = styled.div`
+`;
 
-function ContextContainer() {
+
+function ContextContainer({arrMessages, userId}) {
 	return (
 		<Container>
-			<h1>Context Container</h1>
+			{arrMessages.map((message, index) => {
+				if (message.type === 'user') {
+					return (
+						<Message key={index} message={message.text} author={message.user} className={message.user.id === userId ? 'self' : ''}>
+							{message.text}
+						</Message>
+					);
+				}
+				return (
+					<ContextText key={index}>
+						{message.text}
+					</ContextText>
+				);
+			})}
 		</Container>
 	);
 }

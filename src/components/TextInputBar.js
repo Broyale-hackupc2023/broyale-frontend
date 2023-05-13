@@ -31,6 +31,8 @@ const StyledInput = styled.input`
 `;
 
 function TextInputBar({ input, setInput, sendInput }) {
+
+
 	return (
 		<>
 			<InputBar>

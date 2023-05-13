@@ -133,7 +133,7 @@ const Player = styled.div`
 function RoomDialog({ userId, room, startGame, joinRoom, leaveRoom, onClose }) {
 
 	const playerIsInRoom = userId !== undefined && room.players.find(player => player.id === userId);
-	const canStartGame = room.players.length >= 2 && room.players.length <= room.max_players && playerIsInRoom;
+	const canStartGame = room.players.length >= 2 && room.players.length <= room.max_players && playerIsInRoom && room.owner.id === userId;
 
 	const handleClose = (event) => {
 		if (!playerIsInRoom) {
@@ -151,6 +151,9 @@ function RoomDialog({ userId, room, startGame, joinRoom, leaveRoom, onClose }) {
 						<div className="icon">
 							<SlIcon name="x" onClick={onClose} />
 						</div>
+					)}
+					{room.active && (
+						'GAME IS ACTIVE, YOU SHOULD NOT SEE THIS'
 					)}
 				</div>
 				<div className="body">

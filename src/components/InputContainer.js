@@ -35,7 +35,7 @@ const SuggestionContainer = styled.div`
 `;
 
 
-function InputContainer({ suggestions, sendInput }) {
+function InputContainer({ sendInput, canSendInput }) {
 	const [input, setInput] = useState('');
 
 	const handleSuggestionClick = (suggestion) => {
@@ -44,20 +44,11 @@ function InputContainer({ suggestions, sendInput }) {
 
 	return (
 		<StyledInputContainer className="InputContainer">
-			<SuggestionContainer>
-				{suggestions.map((suggestion, index) => (
-					<SuggestionButton
-						key={index}
-						sendInput={sendInput}
-						text={suggestion}
-					/>
-				))}
-			</SuggestionContainer>
-			
 			<TextInputBar
 				input={input}
 				setInput={setInput}
 				sendInput={sendInput}
+				disabled={!canSendInput}
 			/>
 		</StyledInputContainer>
 	);

@@ -57,9 +57,9 @@ const RoomCardsContainer = styled.div`
 `;
 
 
-function Lobby({ userId, availableRooms, currentRoom, createRoom, joinRoom, leaveRoom, startGame }) {
+function Lobby({ userId, availableRooms, currentRoomId, createRoom, joinRoom, leaveRoom, startGame }) {
 
-	const [selectedRoomId, setSelectedRoomId] = useState(currentRoom ? currentRoom.id : null);
+	const [selectedRoomId, setSelectedRoomId] = useState(currentRoomId !== null ? currentRoomId : null);
 	const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
 	const handleCreateRoom = (roomName, roomDescription) => {
@@ -68,7 +68,7 @@ function Lobby({ userId, availableRooms, currentRoom, createRoom, joinRoom, leav
 	}
 
 	const handleSetSelectedRoomId = (roomId) => {
-		if (currentRoom === null) {
+		if (currentRoomId === null) {
 			setSelectedRoomId(roomId);
 			console.log('selected room id', roomId);
 		}
@@ -90,9 +90,9 @@ function Lobby({ userId, availableRooms, currentRoom, createRoom, joinRoom, leav
 						room={room}
 						onClick={handleSetSelectedRoomId}
 						isOpen={
-							currentRoom === null
+							currentRoomId === null
 								? selectedRoomId === room.id
-								: currentRoom.id === room.id
+								: currentRoomId === room.id
 						}
 						joinRoom={joinRoom}
 						leaveRoom={leaveRoom}
