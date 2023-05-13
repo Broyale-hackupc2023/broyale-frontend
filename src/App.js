@@ -30,8 +30,29 @@ function App() {
 			setRooms(rooms);
 		});
 
-		socket.on("joined_room", (roomid) => {
-			setCurrentRoom(roomid);
+		socket.on("joined_room", (room) => {
+			setCurrentRoom(room);
+		});
+
+		socket.on("error", (error) => {
+			// Create a sl-alert element
+			const alert = Object.assign(document.createElement("sl-alert"), {
+				variant: "danger",
+				closable: true,
+				duration: 3000,
+				innerHTML: `
+					<sl-icon slot="icon" name="exclamation-octagon"></sl-icon>
+					${error}
+				`,
+			});
+
+			// Append to body
+			document.body.appendChild(alert);
+			return alert.toast();
+		});
+
+		socket.on("start_game", () => {
+			setPlaying(true);
 		});
 
 		setSocket(socket);
@@ -74,6 +95,7 @@ function App() {
 			"owner": "1",
 		}
 	]);
+
 	const [currentRoom, setCurrentRoom] = useState(null);
 	const createRoom = (name, description) => {
 		socket.emit("create_room", {
@@ -90,7 +112,11 @@ function App() {
 		socket.emit("leave_room");
 		setCurrentRoom(null);
 	}
-	const startGame = () => { }
+	const startGame = (room) => {
+		socket.emit("start_game", {
+			'room_id': room,
+		});
+	}
 
 	// Game variables
 	const [canSendInput, setCanSendInput] = useState(false);

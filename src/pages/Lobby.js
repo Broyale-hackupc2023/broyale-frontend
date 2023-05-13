@@ -9,7 +9,7 @@ const LobbyContainer = styled.div`
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	padding: 1rem 0;
+	padding: 1rem 1rem;
 	gap: 16px;
 
 	>* {
@@ -78,7 +78,9 @@ function Lobby({ userId, availableRooms, currentRoom, createRoom, joinRoom, leav
 		<LobbyContainer>
 			<Header>
 				<h1>Join a Room</h1>
-				<JoinButton onClick={() => setIsCreatingRoom(true)}>or create one</JoinButton>
+				<JoinButton onClick={() => setIsCreatingRoom(true)}>
+					or create one
+				</JoinButton>
 			</Header>
 			<RoomCardsContainer>
 				{availableRooms.map((room) => (
@@ -87,7 +89,11 @@ function Lobby({ userId, availableRooms, currentRoom, createRoom, joinRoom, leav
 						userId={userId}
 						room={room}
 						onClick={handleSetSelectedRoomId}
-						isOpen={selectedRoomId === room.id}
+						isOpen={
+							currentRoom === null
+								? selectedRoomId === room.id
+								: currentRoom.id === room.id
+						}
 						joinRoom={joinRoom}
 						leaveRoom={leaveRoom}
 						startGame={startGame}

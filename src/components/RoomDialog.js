@@ -161,6 +161,9 @@ function RoomDialog({ userId, room, startGame, joinRoom, leaveRoom, onClose }) {
 							className={player.id === userId ? "self" : ""}
 						>
 							<p>{player.name}</p>
+							{player.id === room.owner.id ? (
+								<SlIcon name="heart-fill" />
+							) : ''}
 						</Player>
 					))}
 				</div>
@@ -179,6 +182,10 @@ function RoomDialog({ userId, room, startGame, joinRoom, leaveRoom, onClose }) {
 								</button>
 							)}
 						</>
+					) : room.active ? (
+							<>
+								<p>Game in progress</p>
+							</>
 					) : (
 						<>
 							<button onClick={() => joinRoom(room)}>
