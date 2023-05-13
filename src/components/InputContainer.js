@@ -11,7 +11,7 @@ const StyledInputContainer = styled.div`
 	justify-content: flex-end;
 	width: 100%;
 	max-width: 800px;
-	overflow: hidden;
+	
 	background-color: #282c34;
 	color: #ccc;
 	gap: 8px;
@@ -19,12 +19,14 @@ const StyledInputContainer = styled.div`
 
 const SuggestionContainer = styled.div`
 	display: flex;
-	flex-flow: row nowrap;
+	flex-flow: row wrap;
 	align-items: center;
 	justify-content: flex-start;
 	width: 100%;
+	height:fit-content;
 	max-width: 100%;
-	overflow: auto;
+	
+	gap: 8px;
 
 	&::-webkit-scrollbar {
 		width: 0px;
@@ -33,7 +35,7 @@ const SuggestionContainer = styled.div`
 `;
 
 
-function InputContainer(suggestions, sendInput) {
+function InputContainer({ suggestions, sendInput }) {
 	const [input, setInput] = useState('');
 
 	const handleSuggestionClick = (suggestion) => {
@@ -43,12 +45,13 @@ function InputContainer(suggestions, sendInput) {
 	return (
 		<StyledInputContainer className="InputContainer">
 			<SuggestionContainer>
-				{/* {suggestions.map((suggestion, index) => (
+				{suggestions.map((suggestion, index) => (
 					<SuggestionButton
 						key={index}
 						sendInput={sendInput}
+						text={suggestion}
 					/>
-				))} */}
+				))}
 			</SuggestionContainer>
 			
 			<TextInputBar
