@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/broyale-frontend/static/css/main.88d51fc6.css",
+    "main.js": "/broyale-frontend/static/js/main.79601bf6.js",
+    "index.html": "/broyale-frontend/index.html",
+    "main.88d51fc6.css.map": "/broyale-frontend/static/css/main.88d51fc6.css.map",
+    "main.79601bf6.js.map": "/broyale-frontend/static/js/main.79601bf6.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88d51fc6.css",
+    "static/js/main.79601bf6.js"
+  ]
+}
