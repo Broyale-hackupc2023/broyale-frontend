@@ -4,15 +4,14 @@ import Game from "./pages/Game";
 import Lobby from "./pages/Lobby";
 import Login from "./pages/Login";
 
-const ENDPOINT = "http://localhost:5000";
-
 function App() {
 	const [theme, setTheme] = useState("dark");
 
 	const [socket, setSocket] = useState(null);
 
 	useEffect(() => {
-		const socket = io(ENDPOINT);
+		// get endpoint from .env
+		const socket = io(process.env.REACT_APP_API_URL);
 
 		socket.on("connect", () => {
 			console.log("Connected to server as " + socket.id);
