@@ -34,6 +34,15 @@ function App() {
 			setCurrentRoomId(room.id);
 		});
 
+		socket.on("ask_for_input", () => {
+			setCanSendInput(true);
+		})
+
+		socket.on("room_messages_update", (messages) => {
+			setArrMessages(messages);
+			console.log("updated messages", messages);
+		});
+
 		socket.on("error", (error) => {
 			// Create a sl-alert element
 			const alert = Object.assign(document.createElement("sl-alert"), {
@@ -114,11 +123,13 @@ function App() {
 	}
 
 	// Game variables
-	const [gameStarted, setGameStarted] = useState(false);
 	const [canSendInput, setCanSendInput] = useState(false);
 	const [arrMessages, setArrMessages] = useState([]);
 	const sendInput = (input) => {
-
+		setCanSendInput(false);
+		socket.emit("send_input", {
+			'input': input,
+		});
 	}
 
 	return (
